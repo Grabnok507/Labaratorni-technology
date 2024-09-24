@@ -45,12 +45,16 @@ def analyze_text(text):
     for char, freq in sorted_freqs:
         print(f"{repr(char):^7} | {freq}")
 
+    # Общее количество символов
+    total_chars = len(text)
+    print(f"\nОбщее количество символов в тексте: {total_chars}")
+
     # Вычисление и вывод энтропии
     entropy = calculate_entropy(freqs)
     print(f"\nЭнтропия текста: {entropy:.4f} бит на символ")
 
     # Вычисление и вывод количества информации
-    total_info = calculate_information(entropy, len(text))
+    total_info = calculate_information(entropy, total_chars)
     print(f"Количество информации в тексте: {total_info:.4f} бит")
 
 # Основная функция для анализа сайта
