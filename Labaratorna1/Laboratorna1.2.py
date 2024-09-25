@@ -37,13 +37,13 @@ def filter_text_by_language(text, language):
 # Функция для анализа текста
 def analyze_text(text):
     freqs = Counter(text)  # Подсчет частоты символов
-    sorted_freqs = sorted(freqs.items(), key=lambda x: x[1])  # Сортировка по частоте
+    sorted_freqs = sorted(freqs.items(), key=lambda x: x[1], reverse=True)  # Сортировка по частоте
 
     # Вывод символов и их частоты
-    print("Символ | Частота")
+    print(f"{'Символ':^7} | {'Частота':^7}")
     print("-----------------")
     for char, freq in sorted_freqs:
-        print(f"{repr(char):^7} | {freq}")
+        print(f"{repr(char):^7} | {freq:^7}")
 
     # Общее количество символов
     total_chars = len(text)
@@ -57,8 +57,8 @@ def analyze_text(text):
     total_info = calculate_information(entropy, total_chars)
     print(f"Количество информации в тексте: {total_info:.4f} бит")
 
-# Основная функция для анализа сайта
-def analyze_website(url):
+# Функция для анализа сайта по выбранному языку
+def analyze_website_by_language(url, language=None):
     try:
         # Получаем контент с сайта
         response = requests.get(url)
@@ -67,8 +67,20 @@ def analyze_website(url):
         # Очищаем текст от HTML тегов
         text = clean_html(response.text)
 
-        # Анализ текста
-        analyze_text(text)
+        # Если язык выбран, фильтруем текст
+        if language:
+            filtered_text = filter_text_by_language(text, language)
+            analyze_text(filtered_text)
+        else:
+            # Если язык не выбран, анализируем текст для всех языков
+            print("\nАнализ текста на украинском языке:")
+            analyze_text(filter_text_by_language(text, 'ukrainian'))
+
+            print("\nАнализ текста на русском языке:")
+            analyze_text(filter_text_by_language(text, 'russian'))
+
+            print("\nАнализ текста на английском языке:")
+            analyze_text(filter_text_by_language(text, 'english'))
 
     except requests.exceptions.RequestException as e:
         print(f"Ошибка при попытке доступа к сайту: {e}")
@@ -76,7 +88,23 @@ def analyze_website(url):
 # Основная программа
 def main():
     url = input("Введите URL сайта для анализа: ")
-    analyze_website(url)
+
+    # Ввод выбора анализа по языку
+    language_choice = input(
+        "Выберите язык для анализа - украинский (1), русский (2), английский (3), или все языки сразу (4): "
+    )
+
+    if language_choice == '1':
+        analyze_website_by_language(url, 'ukrainian')
+    elif language_choice == '2':
+        analyze_website_by_language(url, 'russian')
+    elif language_choice == '3':
+        analyze_website_by_language(url, 'english')
+    elif language_choice == '4':
+        analyze_website_by_language(url)  # Без фильтрации, анализ всех языков
+    else:
+        print("Неверный выбор. Пожалуйста, выберите 1, 2, 3 или 4.")
 
 if __name__ == "__main__":
     main()
+
