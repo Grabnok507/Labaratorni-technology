@@ -71,6 +71,16 @@ def analyze_text(text):
     # Анализ текста на английском
     analyze_language_text(english_text, 'английском')
 
+# Функция для анализа текста на выбранном языке
+def analyze_single_language_text(text, language):
+    filtered_text = filter_text_by_language(text, language)
+    if language == 'ukrainian':
+        analyze_language_text(filtered_text, 'украинском')
+    elif language == 'german':
+        analyze_language_text(filtered_text, 'немецком')
+    elif language == 'english':
+        analyze_language_text(filtered_text, 'английском')
+
 # Функция для чтения текста из файла с обработкой ошибок кодировки
 def read_file(file_path):
     try:
@@ -96,8 +106,6 @@ def main():
     if choice == '1':
         # Ввод текста вручную
         text = input("Введите текст: ")
-        analyze_text(text)
-
     elif choice == '2':
         # Ввод пути к файлу
         file_path = input("Введите путь к файлу с текстом: ")
@@ -105,11 +113,26 @@ def main():
         # Чтение текста из файла
         text = read_file(file_path)
 
-        # Если файл успешно прочитан, анализ текста
-        if text:
-            analyze_text(text)
+        # Проверка, удалось ли загрузить текст
+        if not text:
+            return
     else:
         print("Неверный выбор. Пожалуйста, введите 1 или 2.")
+        return
+
+    # Выбор анализа: одного языка или всех
+    language_choice = input("Выберите язык для анализа - украинский (1), немецкий (2), английский (3), или все языки сразу (4): ")
+
+    if language_choice == '1':
+        analyze_single_language_text(text, 'ukrainian')
+    elif language_choice == '2':
+        analyze_single_language_text(text, 'german')
+    elif language_choice == '3':
+        analyze_single_language_text(text, 'english')
+    elif language_choice == '4':
+        analyze_text(text)
+    else:
+        print("Неверный выбор языка.")
 
 # Запуск программы
 if __name__ == "__main__":
