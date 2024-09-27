@@ -2,126 +2,126 @@ from collections import Counter
 import math
 import re
 
-# Функция для подсчета энтропии
+# Функція для підрахунку ентропії
 def calculate_entropy(freqs):
-    total = sum(freqs.values())  # Общее количество символов
+    total = sum(freqs.values())  # Загальна кількість символів
     entropy = 0
     for freq in freqs.values():
         p = freq / total
         entropy -= p * math.log2(p)
     return entropy
 
-# Функция для подсчета количества информации
+# Функція для підрахунку кількості інформації
 def calculate_information(entropy, length):
     return entropy * length
 
-# Функция для фильтрации символов на основе языка
+# Функція для фільтрації символів на основі мови
 def filter_text_by_language(text, language):
     if language == 'ukrainian':
-        # Украинские буквы
+        # Українські букви
         pattern = r'[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]'
     elif language == 'german':
-        # Немецкие буквы
+        # Німецькі букви
         pattern = r'[A-Za-zÄÖÜäöüß]'
     elif language == 'english':
-        # Английские буквы
+        # Англійські букви
         pattern = r'[A-Za-z]'
     else:
         return ''
 
     return ''.join(re.findall(pattern, text))
 
-# Функция для анализа текста по языку
+# Функція для аналізу тексту за мовою
 def analyze_language_text(text, language_name):
-    print(f"\nАнализ для {language_name.capitalize()}:")
+    print(f"\nАналіз для {language_name.capitalize()}:")
     if len(text) == 0:
-        print(f"Нет символов для {language_name.capitalize()}.")
+        print(f"Немає символів для {language_name.capitalize()}.")
         return
 
-    freqs = Counter(text)  # Подсчет частоты символов
-    sorted_freqs = sorted(freqs.items(), key=lambda x: x[1])  # Сортировка по частоте
+    freqs = Counter(text)  # Підрахунок частоти символів
+    sorted_freqs = sorted(freqs.items(), key=lambda x: x[1])  # Сортування за частотою
 
-    # Вывод символов и их частоты
+    # Виведення символів і їх частоти
     print("Символ | Частота")
     print("-----------------")
     for char, freq in sorted_freqs:
         print(f"{repr(char):^7} | {freq}")
 
-    # Вычисление и вывод энтропии
+    # Обчислення і виведення ентропії
     entropy = calculate_entropy(freqs)
-    print(f"\nЭнтропия для {language_name.capitalize()}: {entropy:.4f} бит на символ")
+    print(f"\nЕнтропія для {language_name.capitalize()}: {entropy:.4f} біт на символ")
 
-    # Вычисление и вывод количества информации
+    # Обчислення і виведення кількості інформації
     total_info = calculate_information(entropy, len(text))
-    print(f"Количество информации в {language_name.capitalize()}: {total_info:.4f} бит\n")
+    print(f"Кількість інформації в {language_name.capitalize()}: {total_info:.4f} біт\n")
 
-# Основная функция для анализа текста на всех языках
+# Основна функція для аналізу тексту на всіх мовах
 def analyze_text(text):
-    # Фильтрация текста для каждого языка
+    # Фільтрація тексту для кожної мови
     ukrainian_text = filter_text_by_language(text, 'ukrainian')
     german_text = filter_text_by_language(text, 'german')
     english_text = filter_text_by_language(text, 'english')
 
-    # Анализ текста на украинском
-    analyze_language_text(ukrainian_text, 'украинском')
+    # Аналіз тексту українською
+    analyze_language_text(ukrainian_text, 'українською')
 
-    # Анализ текста на немецком
-    analyze_language_text(german_text, 'немецком')
+    # Аналіз тексту німецькою
+    analyze_language_text(german_text, 'німецькою')
 
-    # Анализ текста на английском
-    analyze_language_text(english_text, 'английском')
+    # Аналіз тексту англійською
+    analyze_language_text(english_text, 'англійською')
 
-# Функция для анализа текста на выбранном языке
+# Функція для аналізу тексту на обраній мові
 def analyze_single_language_text(text, language):
     filtered_text = filter_text_by_language(text, language)
     if language == 'ukrainian':
-        analyze_language_text(filtered_text, 'украинском')
+        analyze_language_text(filtered_text, 'українською')
     elif language == 'german':
-        analyze_language_text(filtered_text, 'немецком')
+        analyze_language_text(filtered_text, 'німецькою')
     elif language == 'english':
-        analyze_language_text(filtered_text, 'английском')
+        analyze_language_text(filtered_text, 'англійською')
 
-# Функция для чтения текста из файла с обработкой ошибок кодировки
+# Функція для читання тексту з файлу з обробкою помилок кодування
 def read_file(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             return file.read()
     except UnicodeDecodeError:
-        # Попробуем другую кодировку (например, cp1251)
+        # Спробуємо інше кодування (наприклад, cp1251)
         try:
             with open(file_path, 'r', encoding='cp1251') as file:
                 return file.read()
         except UnicodeDecodeError:
-            print(f"Ошибка: не удалось прочитать файл {file_path} ни в utf-8, ни в cp1251.")
+            print(f"Помилка: не вдалося прочитати файл {file_path} ні в utf-8, ні в cp1251.")
             return None
     except FileNotFoundError:
-        print(f"Ошибка: файл {file_path} не найден.")
+        print(f"Помилка: файл {file_path} не знайдено.")
         return None
 
-# Основная функция
+# Основна функція
 def main():
-    # Ввод выбора метода
-    choice = input("Вы хотите ввести текст вручную (1) или загрузить из файла (2)? Введите 1 или 2: ")
+    # Введення вибору методу
+    choice = input("Ви хочете ввести текст вручну (1) чи завантажити з файлу (2)? Введіть 1 або 2: ")
 
     if choice == '1':
-        # Ввод текста вручную
-        text = input("Введите текст: ")
+        # Введення тексту вручну
+        text = input("Введіть текст: ")
     elif choice == '2':
-        # Ввод пути к файлу
-        file_path = input("Введите путь к файлу с текстом: ")
+        # Введення шляху до файлу
+        file_path = input("Введіть шлях до файлу з текстом: ")
 
-        # Чтение текста из файла
+        # Читання тексту з файлу
         text = read_file(file_path)
 
-        # Проверка, удалось ли загрузить текст
+        # Перевірка, чи вдалося завантажити текст
         if not text:
             return
     else:
-        print("Неверный выбор. Пожалуйста, введите 1 или 2.")
+        print("Неправильний вибір. Будь ласка, введіть 1 або 2.")
         return
 
-    # Выбор анализа: одного языка или всех
-    language_choice = input("Выберите язык для анализа - украинский (1), немецкий (2), английский (3), или все языки сразу (4): ")
+    # Вибір аналізу: однієї мови чи всіх
+    language_choice = input("Оберіть мову для аналізу - українська (1), німецька (2), англійська (3), або всі мови одразу (4): ")
 
     if language_choice == '1':
         analyze_single_language_text(text, 'ukrainian')
@@ -132,8 +132,9 @@ def main():
     elif language_choice == '4':
         analyze_text(text)
     else:
-        print("Неверный выбор языка.")
+        print("Неправильний вибір мови.")
 
-# Запуск программы
+# Запуск програми
 if __name__ == "__main__":
     main()
+
